@@ -20,25 +20,32 @@ bindings = [
 # v1: original deployment (AdminStore + RouteHub, already applied on Cloudflare)
 [[migrations]]
 tag = "v1"
-new_sqlite_classes = ["AdminStore", "RouteHub"]
-
-# v2: transition — delete old classes and create RelayRoom in one step
-[[migrations]]
-tag = "v2"
-deleted_classes = ["AdminStore", "RouteHub"]
+# 🎯 修改：全新部署时直接创建 RelayRoom 即可，否则在下一步删除 AdminStore 时出错，导致部署失败。
+# new_sqlite_classes = ["AdminStore", "RouteHub"]
 new_sqlite_classes = ["RelayRoom"]
 
+# v2: transition — delete old classes and create RelayRoom in one step
+# [[migrations]]
+# tag = "v2"
+# deleted_classes = ["AdminStore", "RouteHub"]
+# new_sqlite_classes = ["RelayRoom"]
+
+# 🎯 修改：启用 Observability 会消耗大量额度，禁用以节省免费额度。
 [observability]
 enabled = false
 head_sampling_rate = 1
 
 [observability.logs]
-enabled = true
+# enabled = true
+enabled = false
 head_sampling_rate = 1
-persist = true
-invocation_logs = true
+# persist = true
+persist = false
+# invocation_logs = true
+invocation_logs = false
 
 [observability.traces]
 enabled = false
-persist = true
+# persist = true
+persist = false
 head_sampling_rate = 1
