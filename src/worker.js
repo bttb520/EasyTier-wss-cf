@@ -104,7 +104,9 @@ export default {
     const isWsUpgrade = (request.headers.get('Upgrade') || '').toLowerCase() === 'websocket';
     if (!isWsUpgrade) {
       if (pathname === '/') {
-        return Response.redirect(url.origin + '/panel', 302);
+        // 🎯 修改：伪装首页为 404 Not Found，不再重定向到管理后台。
+        // return Response.redirect(url.origin + '/panel', 302);
+        return new Response('Not found', { status: 404 });
       }
       return new Response('Not found', { status: 404 });
     }
